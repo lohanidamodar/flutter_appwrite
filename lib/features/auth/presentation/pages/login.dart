@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_appwrite/features/auth/presentation/notifiers/auth_state.dart';
+import 'package:provider/provider.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -6,6 +8,8 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  TextEditingController _email = TextEditingController();
+  TextEditingController _password = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -17,15 +21,18 @@ class _LoginPageState extends State<LoginPage> {
           shrinkWrap: true,
           padding: const EdgeInsets.all(16.0),
           children: <Widget>[
-            Text("Login",style: Theme.of(context).textTheme.headline3,),
+            Text(
+              "Login",
+              style: Theme.of(context).textTheme.headline3,
+            ),
             const SizedBox(height: 20.0),
             TextField(
-              decoration: InputDecoration(
-                hintText: "email"
-              ),
+              controller: _email,
+              decoration: InputDecoration(hintText: "email"),
             ),
             const SizedBox(height: 10.0),
             TextField(
+              controller: _password,
               obscureText: true,
               decoration: InputDecoration(
                 hintText: "password",
@@ -35,8 +42,10 @@ class _LoginPageState extends State<LoginPage> {
             Center(
               child: RaisedButton(
                 child: Text("Login"),
-                onPressed: (){
-
+                onPressed: () {
+                  AuthState state =
+                      Provider.of<AuthState>(context, listen: false);
+                  state.login(_email.text, _password.text);
                 },
               ),
             )
