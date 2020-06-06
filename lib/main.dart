@@ -5,6 +5,8 @@ import 'package:flutter_appwrite/features/auth/presentation/pages/signup.dart';
 import 'package:flutter_appwrite/features/general/presentation/pages/home.dart';
 import 'package:provider/provider.dart';
 
+import 'features/auth/presentation/notifiers/auth_state.dart';
+
 void main() {
   runApp(MyApp());
 }
@@ -29,7 +31,11 @@ class MyApp extends StatelessWidget {
                 borderRadius: BorderRadius.circular(10.0),
               ),
             )),
-        home: LoginPage(),
+        home: Consumer<AuthState>(
+          builder: (context, state, child) {
+            return state.isLoggedIn ? HomePage() : LoginPage();
+          },
+        ),
       ),
     );
   }
