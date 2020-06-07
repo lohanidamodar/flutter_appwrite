@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_appwrite/core/presentation/routes.dart';
 import 'package:flutter_appwrite/features/auth/presentation/notifiers/auth_state.dart';
 import 'package:provider/provider.dart';
 
@@ -48,6 +49,11 @@ class _LoginPageState extends State<LoginPage> {
                   state.login(_email.text, _password.text);
                 },
               ),
+            ),
+            const SizedBox(height: 20.0),
+            OutlineButton(
+              child: Text("Create account"),
+              onPressed: () => Navigator.pushNamed(context, AppRoutes.signup),
             )
           ],
         ),
