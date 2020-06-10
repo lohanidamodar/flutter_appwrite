@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_appwrite/core/presentation/routes.dart';
+import 'package:flutter_appwrite/features/transactions/presentation/widgets/transaction_list.dart';
 
 class HomePage extends StatelessWidget {
   @override
@@ -16,12 +17,7 @@ class HomePage extends StatelessWidget {
           )
         ],
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[],
-        ),
-      ),
+      body: TransactionList(),
     );
   }
 }
