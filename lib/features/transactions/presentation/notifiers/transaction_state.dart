@@ -8,8 +8,10 @@ class TransactionState extends ChangeNotifier {
   Client client = Client();
   Database db;
   String _error;
+  List<Transaction> _transactions;
 
   String get error => _error;
+  List<Transaction> get transactions => _transactions;
 
   TransactionState() {
     _init();
@@ -20,19 +22,30 @@ class TransactionState extends ChangeNotifier {
         .setEndpoint(AppConstants.endpoint)
         .setProject(AppConstants.projectId);
     db = Database(client);
+    _transactions = [];
+    _getTransactions();
   }
 
-  Future<List<Transaction>> transactions() async {
+  Future<void> _getTransactions() async {
     try {
       Response res = await db.listDocuments(collectionId: collectionId);
       if(res.statusCode == 200) {
-        return List<Transaction>.from( res.data["documents"].map((tr) => Transaction.fromJson(tr)));
-      }else{
-        return null;
+        _transactions = List<Transaction>.from( res.data["documents"].map((tr) => Transaction.fromJson(tr)));
+        notifyListeners();
       }
     }catch(e) {
       print(e.message);
-      return null;
+    }
+  }
+
+  Future addTransaction(Transaction transaction) async {
+    try{
+      Response res = await db.createDocument(collectionId: collectionId, data: transaction.toJson(),read: ["user:${transaction.userId}"],write: ["user:${transaction.userId}"]);
+      transactions.add(Transaction.fromJson(res.data));
+      notifyListeners();
+      print(res.data);
+    }catch(e){
+      print(e.message);
     }
   }
 

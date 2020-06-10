@@ -7,11 +7,7 @@ import 'package:provider/provider.dart';
 class TransactionList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: Provider.of<TransactionState>(context).transactions(),
-      builder: (BuildContext context, AsyncSnapshot snapshot) {
-        if(snapshot.hasData) {
-          List<Transaction> transactions = snapshot.data;
+          List<Transaction> transactions = Provider.of<TransactionState>(context).transactions;
           return ListView.builder(
             itemCount: transactions.length,
             itemBuilder: (context,index)  {
@@ -24,9 +20,5 @@ class TransactionList extends StatelessWidget {
               );
             },
           );
-        }
-        return Container();
-      },
-    );
   }
 }

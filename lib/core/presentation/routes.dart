@@ -3,12 +3,14 @@ import 'package:flutter_appwrite/features/auth/presentation/pages/login.dart';
 import 'package:flutter_appwrite/features/auth/presentation/pages/profile.dart';
 import 'package:flutter_appwrite/features/auth/presentation/pages/signup.dart';
 import 'package:flutter_appwrite/features/general/presentation/pages/home.dart';
+import 'package:flutter_appwrite/features/transactions/presentation/pages/add_transaction.dart';
 
 class AppRoutes {
   static const String login = "login";
   static const String signup = "signup";
   static const String profile = "profile";
   static const String home = "home";
+  static const String addTransaction = "add_transaction";
   
   static Route<dynamic> onGenerateRoute(RouteSettings settings) {
     return MaterialPageRoute(
@@ -20,6 +22,8 @@ class AppRoutes {
             return HomePage();
           case signup:
             return SignupPage();
+          case addTransaction:
+            return AddTransaction();
           case login:
           default:
             return LoginPage();
