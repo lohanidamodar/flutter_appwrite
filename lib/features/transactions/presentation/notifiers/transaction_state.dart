@@ -70,4 +70,18 @@ class TransactionState extends ChangeNotifier {
       print(e.message);
     }
   }
+
+  Future deleteTransaction(Transaction transaction) async {
+    try {
+      await db.deleteDocument(
+        collectionId: collectionId,
+        documentId: transaction.id,
+      );
+      _transactions = List<Transaction>.from(
+          _transactions.where((tran) => tran.id != transaction.id));
+      notifyListeners();
+    } catch (e) {
+      print(e.message);
+    }
+  }
 }
