@@ -19,11 +19,13 @@ class _AddTransactionState extends State<AddTransaction> {
   TextEditingController _amountController;
   TextEditingController _descriptionController;
   bool _isEdit;
+  int _transactionType;
 
   @override
   void initState() {
     super.initState();
     _isEdit = widget.transaction != null;
+    _transactionType = _isEdit ? widget.transaction.transactionType : 1;
     today = DateTime.now();
     _tdate = _isEdit ? widget.transaction.transactionDate : today;
     _titleController =
@@ -43,6 +45,34 @@ class _AddTransactionState extends State<AddTransaction> {
       body: ListView(
         padding: const EdgeInsets.all(16.0),
         children: <Widget>[
+          Row(
+            children: <Widget>[
+              Expanded(
+                child: RadioListTile(
+                  groupValue: _transactionType,
+                  value: 2,
+                  title: Text("Expense"),
+                  onChanged: (val) {
+                    setState(() {
+                      _transactionType = val;
+                    });
+                  },
+                ),
+              ),
+              Expanded(
+                child: RadioListTile(
+                  groupValue: _transactionType,
+                  value: 1,
+                  title: Text("Income"),
+                  onChanged: (val) {
+                    setState(() {
+                      _transactionType = val;
+                    });
+                  },
+                ),
+              ),
+            ],
+          ),
           TextField(
             controller: _titleController,
             decoration: InputDecoration(hintText: "title"),
@@ -85,8 +115,7 @@ class _AddTransactionState extends State<AddTransaction> {
                     createdAt: DateTime.now(),
                     updatedAt: DateTime.now(),
                     userId: userId,
-                    transactionType:
-                        _isEdit ? widget.transaction.transactionType : null,
+                    transactionType: _transactionType,
                   );
                   TransactionState ts =
                       Provider.of<TransactionState>(context, listen: false);
