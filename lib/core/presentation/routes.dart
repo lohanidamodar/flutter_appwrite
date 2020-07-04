@@ -12,6 +12,7 @@ class AppRoutes {
   static const String profile = "profile";
   static const String home = "home";
   static const String addTransaction = "add_transaction";
+  static const String editTransaction = "edit_transaction";
   static const String transactionDetails = "transaction_details";
 
   static Route<dynamic> onGenerateRoute(RouteSettings settings) {
@@ -25,6 +26,8 @@ class AppRoutes {
           return SignupPage();
         case addTransaction:
           return AddTransaction();
+        case editTransaction:
+          return AddTransaction(transaction: settings.arguments,);
         case transactionDetails:
           return TransactionDetails(
             transaction: settings.arguments,

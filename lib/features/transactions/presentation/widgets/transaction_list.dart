@@ -26,6 +26,10 @@ class TransactionList extends StatelessWidget {
             Navigator.pushNamed(context, AppRoutes.transactionDetails,
                 arguments: transaction);
           },
+          onLongPress: () {
+            Navigator.pushNamed(context, AppRoutes.editTransaction,
+                arguments: transaction);
+          },
         );
       },
     );

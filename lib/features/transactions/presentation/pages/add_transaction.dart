@@ -5,6 +5,9 @@ import 'package:flutter_appwrite/features/transactions/presentation/notifiers/tr
 import 'package:provider/provider.dart';
 
 class AddTransaction extends StatefulWidget {
+  final Transaction transaction;
+
+  const AddTransaction({Key key, this.transaction}) : super(key: key);
   @override
   _AddTransactionState createState() => _AddTransactionState();
 }
@@ -15,15 +18,20 @@ class _AddTransactionState extends State<AddTransaction> {
   TextEditingController _titleController;
   TextEditingController _amountController;
   TextEditingController _descriptionController;
+  bool _isEdit;
 
   @override
   void initState() {
     super.initState();
+    _isEdit = widget.transaction != null;
     today = DateTime.now();
-    _tdate = today;
-    _titleController = TextEditingController();
-    _amountController = TextEditingController();
-    _descriptionController = TextEditingController();
+    _tdate = _isEdit ? widget.transaction.transactionDate : today;
+    _titleController =
+        TextEditingController(text: _isEdit ? widget.transaction.title : null);
+    _amountController = TextEditingController(
+        text: _isEdit ? widget.transaction.amount.toString() : null);
+    _descriptionController = TextEditingController(
+        text: _isEdit ? widget.transaction.description : null);
   }
 
   @override
@@ -67,22 +75,28 @@ class _AddTransactionState extends State<AddTransaction> {
               onPressed: () async {
                 String userId =
                     Provider.of<AuthState>(context, listen: false).user.id;
-                    try {
-                      
-                await Provider.of<TransactionState>(context, listen: false)
-                    .addTransaction(Transaction(
-                  title: _titleController.text,
-                  amount: int.parse(_amountController.text),
-                  description: _descriptionController.text,
-                  transactionDate: _tdate,
-                  createdAt: DateTime.now(),
-                  updatedAt: DateTime.now(),
-                  userId: userId,
-                ));
-                Navigator.pop(context);
-                    }catch(e) {
-                      
-                    }
+                try {
+                  Transaction transaction = Transaction(
+                    id: _isEdit ? widget.transaction.id : null,
+                    title: _titleController.text,
+                    amount: int.parse(_amountController.text),
+                    description: _descriptionController.text,
+                    transactionDate: _tdate,
+                    createdAt: DateTime.now(),
+                    updatedAt: DateTime.now(),
+                    userId: userId,
+                    transactionType:
+                        _isEdit ? widget.transaction.transactionType : null,
+                  );
+                  TransactionState ts =
+                      Provider.of<TransactionState>(context, listen: false);
+                  if (_isEdit) {
+                    await ts.updateTransaction(transaction);
+                  } else {
+                    await ts.addTransaction(transaction);
+                  }
+                  Navigator.pop(context);
+                } catch (e) {}
               },
             ),
           )

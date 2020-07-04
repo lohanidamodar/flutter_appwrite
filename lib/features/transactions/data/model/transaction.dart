@@ -21,7 +21,7 @@ class Transaction {
       this.updatedAt});
 
   Transaction.fromJson(Map<String, dynamic> json) {
-    id = json['$id'];
+    id = json['\$id'];
     title = json['title'];
     description = json['description'];
     userId = json['user_id'];
