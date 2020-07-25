@@ -4,6 +4,7 @@ import 'package:flutter_appwrite/features/auth/presentation/pages/profile.dart';
 import 'package:flutter_appwrite/features/auth/presentation/pages/signup.dart';
 import 'package:flutter_appwrite/features/general/presentation/pages/home.dart';
 import 'package:flutter_appwrite/features/transactions/presentation/pages/add_transaction.dart';
+import 'package:flutter_appwrite/features/transactions/presentation/pages/reports.dart';
 import 'package:flutter_appwrite/features/transactions/presentation/pages/transaction_details.dart';
 
 class AppRoutes {
@@ -14,6 +15,7 @@ class AppRoutes {
   static const String addTransaction = "add_transaction";
   static const String editTransaction = "edit_transaction";
   static const String transactionDetails = "transaction_details";
+  static const String reports = "transaction_reports";
 
   static Route<dynamic> onGenerateRoute(RouteSettings settings) {
     return MaterialPageRoute(builder: (context) {
@@ -27,11 +29,15 @@ class AppRoutes {
         case addTransaction:
           return AddTransaction();
         case editTransaction:
-          return AddTransaction(transaction: settings.arguments,);
+          return AddTransaction(
+            transaction: settings.arguments,
+          );
         case transactionDetails:
           return TransactionDetails(
             transaction: settings.arguments,
           );
+        case reports:
+          return ReportsPage();
         case login:
         default:
           return LoginPage();

@@ -22,6 +22,25 @@ class HomePage extends StatelessWidget {
         child: Icon(Icons.add),
         onPressed: () => Navigator.pushNamed(context, AppRoutes.addTransaction),
       ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
+      bottomNavigationBar: BottomAppBar(
+        shape: CircularNotchedRectangle(),
+        child: Container(
+          alignment: Alignment.center,
+          height: 50,
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              IconButton(
+                icon: Icon(Icons.receipt),
+                onPressed: () {
+                  Navigator.pushNamed(context, AppRoutes.reports);
+                },
+              )
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

@@ -26,6 +26,8 @@ dependencies:
   provider: ^4.1.2
   appwrite: ^0.2.2
   intl: ^0.16.1
+  date_range_picker: ^1.0.6
+  date_utils: ^0.1.0+3
 
 dev_dependencies:
   flutter_test:

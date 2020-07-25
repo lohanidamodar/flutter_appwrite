@@ -26,9 +26,32 @@ class TransactionState extends ChangeNotifier {
     _getTransactions();
   }
 
+  Future<List<Transaction>> queryTransactions(
+      {DateTime from, DateTime to}) async {
+    try {
+      Response res = await db.listDocuments(
+        collectionId: collectionId,
+        filters: [
+          "transaction_date>=${from.millisecondsSinceEpoch}",
+          "transaction_date<=${to.millisecondsSinceEpoch}",
+        ],
+        orderField: 'transaction_date',
+      );
+      if (res.statusCode == 200) {
+        return List<Transaction>.from(
+            res.data["documents"].map((tr) => Transaction.fromJson(tr)));
+      }
+      return null;
+    } catch (e) {
+      print(e.message);
+      return null;
+    }
+  }
+
   Future<void> _getTransactions() async {
     try {
-      Response res = await db.listDocuments(collectionId: collectionId);
+      Response res = await db.listDocuments(
+          collectionId: collectionId, orderField: 'transaction_date');
       if (res.statusCode == 200) {
         _transactions = List<Transaction>.from(
             res.data["documents"].map((tr) => Transaction.fromJson(tr)));
