@@ -9,9 +9,17 @@ class TransactionState extends ChangeNotifier {
   Database db;
   String _error;
   List<Transaction> _transactions;
+  String _query;
+  List<Transaction> _searchResults;
 
   String get error => _error;
   List<Transaction> get transactions => _transactions;
+  List<Transaction> get searchResults => _searchResults;
+
+  set query(String query) {
+    _query = query;
+    _searchTransaction();
+  }
 
   TransactionState() {
     _init();
@@ -45,6 +53,24 @@ class TransactionState extends ChangeNotifier {
     } catch (e) {
       print(e.message);
       return null;
+    }
+  }
+
+  //search uses full text search
+  //https://www.w3resource.com/mysql/mysql-full-text-search-functions.php
+  Future<void> _searchTransaction() async {
+    try {
+      Response res = await db.listDocuments(
+          collectionId: collectionId,
+          orderField: 'transaction_date',
+          search: "$_query");
+      if (res.statusCode == 200) {
+        _searchResults = List<Transaction>.from(
+            res.data["documents"].map((tr) => Transaction.fromJson(tr)));
+        notifyListeners();
+      }
+    } catch (e) {
+      print(e.message);
     }
   }
 

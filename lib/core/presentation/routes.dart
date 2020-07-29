@@ -5,6 +5,7 @@ import 'package:flutter_appwrite/features/auth/presentation/pages/signup.dart';
 import 'package:flutter_appwrite/features/general/presentation/pages/home.dart';
 import 'package:flutter_appwrite/features/transactions/presentation/pages/add_transaction.dart';
 import 'package:flutter_appwrite/features/transactions/presentation/pages/reports.dart';
+import 'package:flutter_appwrite/features/transactions/presentation/pages/search_transaction.dart';
 import 'package:flutter_appwrite/features/transactions/presentation/pages/transaction_details.dart';
 
 class AppRoutes {
@@ -16,6 +17,7 @@ class AppRoutes {
   static const String editTransaction = "edit_transaction";
   static const String transactionDetails = "transaction_details";
   static const String reports = "transaction_reports";
+  static const String search = "search";
 
   static Route<dynamic> onGenerateRoute(RouteSettings settings) {
     return MaterialPageRoute(builder: (context) {
@@ -36,6 +38,8 @@ class AppRoutes {
           return TransactionDetails(
             transaction: settings.arguments,
           );
+        case search:
+          return SearchPage();
         case reports:
           return ReportsPage();
         case login:

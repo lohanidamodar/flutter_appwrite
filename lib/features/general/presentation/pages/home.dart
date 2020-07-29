@@ -9,6 +9,9 @@ class HomePage extends StatelessWidget {
       appBar: AppBar(
         title: Text('Budgeter'),
         actions: <Widget>[
+          IconButton(icon: Icon(Icons.search), onPressed: (){
+            Navigator.pushNamed(context, AppRoutes.search);
+          },),
           IconButton(
             icon: Icon(Icons.person),
             onPressed: () {
