@@ -44,6 +44,7 @@ class TransactionState extends ChangeNotifier {
           "transaction_date<=${to.millisecondsSinceEpoch}",
         ],
         orderField: 'transaction_date',
+        orderType: OrderType.desc,
       );
       if (res.statusCode == 200) {
         return List<Transaction>.from(
@@ -77,7 +78,10 @@ class TransactionState extends ChangeNotifier {
   Future<void> _getTransactions() async {
     try {
       Response res = await db.listDocuments(
-          collectionId: collectionId, orderField: 'transaction_date');
+        collectionId: collectionId,
+        orderField: 'transaction_date',
+        orderType: OrderType.desc,
+      );
       if (res.statusCode == 200) {
         _transactions = List<Transaction>.from(
             res.data["documents"].map((tr) => Transaction.fromJson(tr)));

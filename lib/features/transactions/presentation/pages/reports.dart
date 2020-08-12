@@ -1,11 +1,11 @@
 import 'package:date_utils/date_utils.dart';
 import 'package:flutter/material.dart';
-import 'package:date_range_picker/date_range_picker.dart' as DateRangePicker;
 import 'package:flutter_appwrite/features/transactions/data/model/transaction.dart';
 import 'package:flutter_appwrite/features/transactions/presentation/notifiers/transaction_state.dart';
 import 'package:flutter_appwrite/features/transactions/presentation/widgets/transaction_list_item.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:date_range_picker/date_range_picker.dart' as DateRangePicker;
 
 class ReportsPage extends StatefulWidget {
   @override
@@ -20,13 +20,16 @@ class _ReportsPageState extends State<ReportsPage> {
   int totalExpense = 0;
   bool loading = false;
   List<Transaction> transactions;
+
   @override
   void initState() {
     super.initState();
     today = DateTime.now();
     today = DateTime(today.year, today.month, today.day);
+
     startDate = Utils.firstDayOfWeek(today);
     endDate = today;
+
     _getTransactions();
   }
 
@@ -42,6 +45,7 @@ class _ReportsPageState extends State<ReportsPage> {
       totalExpense = 0;
       loading = true;
     });
+
     transactions = await Provider.of<TransactionState>(context, listen: false)
         .queryTransactions(from: startOfDay(startDate), to: endOfDay(endDate));
     if (transactions != null) {
@@ -62,41 +66,37 @@ class _ReportsPageState extends State<ReportsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Reports'),
+        title: Text('Report'),
       ),
       body: ListView(
         children: <Widget>[
           ListTile(
-            title: Text(DateFormat.yMMMEd().format(startDate) +
-                " - " +
-                DateFormat.yMMMEd().format(endDate)),
-            trailing: IconButton(
-              icon: Icon(Icons.calendar_view_day),
-              onPressed: () async {
-                List<DateTime> range = await DateRangePicker.showDatePicker(
-                  context: context,
-                  initialFirstDate: startDate,
-                  initialLastDate: endDate,
-                  firstDate: DateTime(today.year - 5),
-                  lastDate: DateTime(today.year + 5),
-                  initialDatePickerMode: DateRangePicker.DatePickerMode.day,
-                );
-                if (range != null) {
-                  startDate = range.first;
-                  endDate = range.last;
-                  _getTransactions();
-                }
-              },
+            title: Text(
+              DateFormat.yMMMd().format(startDate) +
+                  " - " +
+                  DateFormat.yMMMd().format(endDate),
             ),
+            onTap: () async {
+              List<DateTime> range = await DateRangePicker.showDatePicker(
+                context: context,
+                firstDate: DateTime(today.year - 5),
+                lastDate: DateTime(today.year + 5),
+                initialFirstDate: startDate,
+                initialLastDate: endDate,
+                initialDatePickerMode: DateRangePicker.DatePickerMode.day,
+              );
+              if (range != null) {
+                startDate = range.first;
+                endDate = range.last;
+                _getTransactions();
+              }
+            },
           ),
           const SizedBox(height: 10.0),
-          if (loading) ...[
-            CircularProgressIndicator(),
-          ],
+          if (loading) CircularProgressIndicator(),
           if (!loading) ...[
             Row(
               children: <Widget>[
-                const SizedBox(width: 10.0),
                 Expanded(
                   child: Card(
                     child: Padding(
@@ -124,7 +124,6 @@ class _ReportsPageState extends State<ReportsPage> {
                     ),
                   ),
                 ),
-                const SizedBox(width: 10.0),
               ],
             ),
             if (transactions != null)
@@ -133,13 +132,12 @@ class _ReportsPageState extends State<ReportsPage> {
                 shrinkWrap: true,
                 itemCount: transactions.length,
                 itemBuilder: (BuildContext context, int index) {
-                  Transaction trans = transactions[index];
                   return TransactionListItem(
-                    transaction: trans,
+                    transaction: transactions[index],
                   );
                 },
               ),
-          ]
+          ],
         ],
       ),
     );
