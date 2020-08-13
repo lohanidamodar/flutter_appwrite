@@ -2,6 +2,9 @@ import 'package:appwrite/appwrite.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_appwrite/core/res/app_constants.dart';
 import 'package:flutter_appwrite/features/auth/data/model/user.dart';
+import 'package:flutter_appwrite/features/settings/data/model/country.dart';
+import 'package:flutter_appwrite/features/settings/data/model/currency.dart';
+import 'package:flutter_appwrite/features/settings/data/model/prefs.dart';
 
 class AuthState extends ChangeNotifier {
   Client client = Client();
@@ -9,10 +12,18 @@ class AuthState extends ChangeNotifier {
   bool _isLoggedIn;
   User _user;
   String _error;
+  bool _settingsLoaded;
+  Locale locale;
+  Prefs _prefs;
+  List<Currency> _currencies;
+  List<Country> _countries;
 
   bool get isLoggedIn => _isLoggedIn;
   User get user => _user;
   String get error => _error;
+  Prefs get prefs => _prefs;
+  List get countries => _countries;
+  List<Currency> get currencies => _currencies;
 
   AuthState() {
     _init();
@@ -25,6 +36,9 @@ class AuthState extends ChangeNotifier {
     client
         .setEndpoint(AppConstants.endpoint)
         .setProject(AppConstants.projectId);
+    locale = Locale(client);
+    _settingsLoaded = false;
+    _getUserPrefs();
     _checkIsLoggedIn();
   }
 
@@ -35,6 +49,72 @@ class AuthState extends ChangeNotifier {
       notifyListeners();
     } catch (e) {
       print(e.message);
+    }
+  }
+
+  Future loadSettings() async {
+    if (_settingsLoaded) return;
+    if (_currencies == null) await _getCurrencies();
+    if (_prefs == null) await _getUserPrefs();
+    if (_countries == null) await _getCountries();
+    _settingsLoaded = true;
+    notifyListeners();
+  }
+
+  Future updatePrefs(Map<String, dynamic> prefs) async {
+    try {
+      Response<dynamic> res = await account.updatePrefs(prefs: prefs);
+      if (res.statusCode == 200) {
+        _prefs = Prefs.fromJson(res.data);
+        notifyListeners();
+      } else {
+        return null;
+      }
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  Future _getUserPrefs() async {
+    try {
+      Response<dynamic> res = await account.getPrefs();
+      if (res.statusCode == 200) {
+        _prefs = Prefs.fromJson(res.data);
+      } else {
+        return null;
+      }
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  Future _getCurrencies() async {
+    try {
+      Response<dynamic> res = await locale.getCurrencies();
+      if (res.statusCode == 200) {
+        _currencies =
+            List<Currency>.from(res.data.map((da) => Currency.fromJson(da)));
+      } else {
+        return null;
+      }
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  Future _getCountries() async {
+    try {
+      Response<dynamic> res = await locale.getCountries();
+      if (res.statusCode == 200) {
+        _countries = [];
+        (res.data as Map<String, dynamic>).forEach((key, value) {
+          _countries.add(Country(code: key, name: value));
+        });
+      } else {
+        return null;
+      }
+    } catch (e) {
+      throw e;
     }
   }
 

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_appwrite/features/auth/presentation/notifiers/auth_state.dart';
+import 'package:flutter_appwrite/features/settings/data/model/prefs.dart';
 import 'package:flutter_appwrite/features/transactions/data/model/transaction.dart';
 import 'package:flutter_appwrite/features/transactions/presentation/notifiers/transaction_state.dart';
 import 'package:intl/intl.dart';
@@ -47,29 +49,18 @@ class TransactionDetails extends StatelessWidget {
       body: ListView(
         padding: const EdgeInsets.all(16.0),
         children: <Widget>[
-          Row(
-            children: <Widget>[
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: <Widget>[
-                    Text(
-                      transaction.title,
-                      style: Theme.of(context).textTheme.headline3,
-                    ),
-                    Text(DateFormat.yMMMEd()
-                        .format(transaction.transactionDate)),
-                  ],
-                ),
-              ),
-              Text(
-                "${transaction.amount}",
-                style: Theme.of(context)
-                    .textTheme
-                    .headline4
-                    .copyWith(color: Colors.black, fontWeight: FontWeight.bold),
-              ),
-            ],
+          Text(
+            transaction.title,
+            style: Theme.of(context).textTheme.headline3,
+          ),
+          Text(DateFormat.yMMMEd().format(transaction.transactionDate)),
+          const SizedBox(height: 10.0),
+          Text(
+            "${_getCurrency(context)} ${transaction.amount}",
+            style: Theme.of(context)
+                .textTheme
+                .headline4
+                .copyWith(color: Colors.black, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 10.0),
           if (transaction.description != null &&
@@ -78,5 +69,11 @@ class TransactionDetails extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  String _getCurrency(BuildContext context) {
+    Prefs prefs = context.watch<AuthState>().prefs;
+    if (prefs == null) return null;
+    return "${prefs.currency.symbol}.";
   }
 }

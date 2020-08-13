@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_appwrite/features/auth/presentation/notifiers/auth_state.dart';
+import 'package:flutter_appwrite/features/settings/data/model/prefs.dart';
 import 'package:flutter_appwrite/features/transactions/data/model/transaction.dart';
 import 'package:flutter_appwrite/features/transactions/presentation/notifiers/transaction_state.dart';
 import 'package:provider/provider.dart';
@@ -80,7 +81,10 @@ class _AddTransactionState extends State<AddTransaction> {
           const SizedBox(height: 10.0),
           TextField(
             controller: _amountController,
-            decoration: InputDecoration(hintText: "amount"),
+            decoration: InputDecoration(
+              hintText: "amount",
+              prefixIcon: _getCurrency(context),
+            ),
           ),
           const SizedBox(height: 10.0),
           TextField(
@@ -132,5 +136,11 @@ class _AddTransactionState extends State<AddTransaction> {
         ],
       ),
     );
+  }
+
+  Widget _getCurrency(BuildContext context) {
+    Prefs prefs = context.watch<AuthState>().prefs;
+    if (prefs == null) return null;
+    return SizedBox(width: 60,height: Theme.of(context).iconTheme.size,child: Center(child: Text("${prefs.currency.symbol}")));
   }
 }

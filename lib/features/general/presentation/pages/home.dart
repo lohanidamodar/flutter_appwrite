@@ -9,15 +9,18 @@ class HomePage extends StatelessWidget {
       appBar: AppBar(
         title: Text('Budgeter'),
         actions: <Widget>[
-          IconButton(icon: Icon(Icons.search), onPressed: (){
-            Navigator.pushNamed(context, AppRoutes.search);
-          },),
+          IconButton(
+            icon: Icon(Icons.search),
+            onPressed: () {
+              Navigator.pushNamed(context, AppRoutes.search);
+            },
+          ),
           IconButton(
             icon: Icon(Icons.person),
             onPressed: () {
               Navigator.pushNamed(context, AppRoutes.profile);
             },
-          )
+          ),
         ],
       ),
       body: TransactionList(),
@@ -39,7 +42,13 @@ class HomePage extends StatelessWidget {
                 onPressed: () {
                   Navigator.pushNamed(context, AppRoutes.reports);
                 },
-              )
+              ),
+              IconButton(
+                icon: Icon(Icons.settings),
+                onPressed: () {
+                  Navigator.pushNamed(context, AppRoutes.settingsPage);
+                },
+              ),
             ],
           ),
         ),
