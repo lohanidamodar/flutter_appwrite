@@ -9,6 +9,7 @@ import 'package:flutter_appwrite/features/settings/data/model/prefs.dart';
 class AuthState extends ChangeNotifier {
   Client client = Client();
   Account account;
+  Storage storage;
   bool _isLoggedIn;
   User _user;
   String _error;
@@ -33,6 +34,7 @@ class AuthState extends ChangeNotifier {
     _isLoggedIn = false;
     _user = null;
     account = Account(client);
+    storage = Storage(client);
     client
         .setEndpoint(AppConstants.endpoint)
         .setProject(AppConstants.projectId);
