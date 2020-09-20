@@ -81,7 +81,11 @@ class AuthState extends ChangeNotifier {
     try {
       Response<dynamic> res = await account.getPrefs();
       if (res.statusCode == 200) {
-        _prefs = Prefs.fromJson(res.data);
+        var data = res.data;
+        if(res.data.isEmpty) {
+          data = Map<String,dynamic>.from({});
+        }
+        _prefs = Prefs.fromJson(data);
       } else {
         return null;
       }
